@@ -3,7 +3,7 @@ import Booking from "../models/booking";
 
 class ReviewService {
   async createReview(userId: number, bookingId: number, rating: number, comment: string | "") {
-    // Ensure booking exists & belongs to this user
+    
     const booking = await Booking.findByPk(bookingId);
     if (!booking) throw new Error("Booking not found");
 

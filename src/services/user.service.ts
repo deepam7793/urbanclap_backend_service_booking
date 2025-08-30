@@ -16,7 +16,7 @@ class UserService {
 
     const isMatch = await bcrypt.compare(
       password,
-      userAvailable.password || "" // avoid undefined
+      userAvailable.password || ""
     );
 
     if (!isMatch) throw new Error("Invalid email or password");
