@@ -125,6 +125,48 @@ Built with **Node.js**, **Express.js**, **Sequelize (PostgreSQL)**, and tested w
 | GET    | `/api/reviews/provider/:providerId` | Get all reviews for a provider      |
 
 ---
+## Business Logic Highlights
+
+### Booking Rules
+
+- **Booking Creation:**  
+  Users can create bookings by specifying the provider, offering, date, and time. New bookings start with a status of `Pending`.
+
+- **Status Updates:**  
+  - Only the **selected provider** associated with the booking can update its status.  
+  - Status transitions are restricted to allowed flows defined by the system. For example:  
+    - `Pending` can transition to `Confirmed` or `Cancelled`  
+    - `Confirmed` can transition to `Completed` or `Cancelled`  
+    - `Completed` and `Cancelled` are terminal states and cannot transition further  
+  - Attempting an invalid status transition will result in an error.
+
+- **Authorization:**  
+  Providers cannot update bookings they are not assigned to.
+
+---
+
+### Review Rules
+
+- **Review Creation:**  
+  - Only the **user who made the booking** can create a review for it.  
+  - Reviews can only be created for bookings with status `Completed`.  
+  - Each booking can have **only one review**; duplicate reviews for the same booking are not allowed.
+
+- **Fetching Reviews:**  
+  Reviews can be fetched by provider, showing all reviews related to that provider’s bookings.
+
+---
+
+### Example: Allowed Booking Status Transitions
+
+| Current Status | Allowed Next Statuses          |
+|----------------|-------------------------------|
+| Pending        | Confirmed, Cancelled           |
+| Confirmed      | Completed, Cancelled           |
+| Completed      | *(no further transitions)*    |
+| Cancelled      | *(no further transitions)*    |
+
+---
 
 ## Project Structure
 
